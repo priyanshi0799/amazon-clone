@@ -4,10 +4,18 @@ import SearchIcon from '@material-ui/icons/Search'
 import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket'
 import { Link } from 'react-router-dom'
 import { useStateValue } from '../../Context/StateProvider'
+import { auth } from '../../firebase'
 
 function Header() {
     // eslint-disable-next-line no-unused-vars
-    const [{ basket }, dispatch] = useStateValue()
+    const [{ basket, user }, dispatch] = useStateValue()
+
+    const handleSignOut = () => {
+        if (user) {
+            auth.signOut()
+        }
+    }
+    console.log(user)
     return (
         <div className="header">
             <Link to="/">
@@ -23,12 +31,14 @@ function Header() {
             </div>
 
             <div className="header__nav">
-                <Link to="/login">
-                    <div className="header__option">
+                <Link to={!user && '/login'}>
+                    <div className="header__option" onClick={handleSignOut}>
                         <span className="header__optionLineOne">
                             Hello Guest
                         </span>
-                        <span className="header__optionLineTwo">Sign In</span>
+                        <span className="header__optionLineTwo">
+                            {user ? 'Sign Out' : 'Sign In'}
+                        </span>
                     </div>
                 </Link>
                 <div className="header__option">
