@@ -1,7 +1,7 @@
 import React from 'react'
 import Rating from '@material-ui/lab/Rating'
 import './Product.css'
-import { useStateValue } from '../../StateProvider'
+import { useStateValue } from '../../Context/StateProvider'
 
 function Product({ id, title, image, price, rating }) {
     const [{ basket }, dispatch] = useStateValue()
@@ -29,14 +29,7 @@ function Product({ id, title, image, price, rating }) {
                     <strong>{price}</strong>
                 </p>
                 <div className="product__rating">
-                    <Rating
-                        value={rating}
-                        max={5}
-                        precision={0.1}
-                        onChange={(value) =>
-                            console.log(`Rated with value ${value}`)
-                        }
-                    />
+                    <Rating value={rating} max={5} precision={0.1} />
                 </div>
             </div>
             <img src={image} alt="" />
