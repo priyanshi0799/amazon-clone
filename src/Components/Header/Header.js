@@ -15,7 +15,6 @@ function Header() {
             auth.signOut()
         }
     }
-    console.log(user)
     return (
         <div className="header">
             <Link to="/">

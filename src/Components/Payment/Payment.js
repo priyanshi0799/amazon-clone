@@ -8,6 +8,7 @@ import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import CurrencyFormat from 'react-currency-format'
 import { getBasketTotal } from '../../Context/reducer'
 import axios from '../../axios'
+import { db } from '../../firebase'
 
 function Payment() {
     const [{ basket, user }, dispatch] = useStateValue()
@@ -50,9 +51,23 @@ function Payment() {
                 },
             })
             .then(({ paymentIntent }) => {
+                db.collection('users')
+                    .doc(user?.uid)
+                    .collection('orders')
+                    .doc(paymentIntent.id)
+                    .set({
+                        basket: basket,
+                        amount: paymentIntent.amount,
+                        created: paymentIntent.created,
+                    })
+
                 setSucceeded(true)
                 setError(null)
                 setProcessing(false)
+
+                dispatch({
+                    type: 'EMPTY_BASKET',
+                })
 
                 history.replace('/orders')
             })
@@ -85,7 +100,7 @@ function Payment() {
                         <h3>Review Items and deliever</h3>
                     </div>
                     <div className="payment__items">
-                        {basket.map((item) => (
+                        {basket?.map((item) => (
                             <CheckoutProduct
                                 id={item.id}
                                 title={item.title}
